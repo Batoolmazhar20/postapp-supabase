@@ -68,7 +68,7 @@ async function login(event) {
 
         document.getElementById("loginFormNew").reset();
 
-        window.location.href = "/dashboard.html";
+        window.location.href = "dashboard.html";
 
     } catch (error) {
         console.log(error);
