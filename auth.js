@@ -81,18 +81,19 @@ async function login(event) {
 document.getElementById("signupFormNew").addEventListener("submit", Signup);
 document.getElementById("loginFormNew").addEventListener("submit", login);
 
-// async function logout() {
-// try {
-//         const { error } = await supabase.auth.signOut()
 
-
-// if(error){
-//     console.log(error.message)
-    
-// }
-//  window.location.href = "dashboard.html";
-// }
-// catch(err) {
-//     console.log(err)
-// }
-// }
+const { data } = supabase.auth.onAuthStateChange((event, session) => {
+    console.log(event, session)
+  
+    if (event === 'INITIAL_SESSION') {
+     if(!session){
+        alert("create account first")
+     }
+    } else if (event === 'SIGNED_IN') {
+      alert("user signed in successfully")
+    location="/dashboard.html"
+    }
+  })
+  
+  // call unsubscribe to remove the callback
+  
