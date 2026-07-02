@@ -180,3 +180,26 @@ body {
     border: none;
     padding: 4px 10px;
 }
+
+
+.search-btn{
+    background:#5b21b6;
+    color:white;
+    border:1px solid #5b21b6;
+}
+
+.search-btn:hover{
+    background:#4c1d95;
+    border-color:#4c1d95;
+    color:white;
+}
+
+#searchInput {
+    background: #24143f;
+    color: white;
+    border: 1px solid #7b2cbf;
+}
+
+#searchInput::placeholder {
+    color: #bfa8ff;
+}
