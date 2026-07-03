@@ -188,6 +188,7 @@ const userID = user.id;
 // Edit Post
 function editPost(event, id, title, description, bgImg) {
 
+    
     // var event= window.event
 
     var card = event.target.parentNode.parentNode;
@@ -250,6 +251,9 @@ try {
                 edited = false
                 edited = null
 
+                if(user_id==userID){
+                    alert("you can only update your post")
+                }
                 location.reload(); // updated data show karne ke liye
 
                 return;
