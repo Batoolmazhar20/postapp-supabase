@@ -5,6 +5,10 @@ let edited = false
 let editId = null
 
 
+
+let email 
+let userID
+
 async function searchBar() {
     let searchInput= document.getElementById("searchInput").value
     console.log(searchInput)
@@ -124,7 +128,7 @@ window.onload = async function () {
 
             
             <div class="ms-auto m-2">
-                <button onclick="editPost(event,${post.id},'${post.tittle}','${post.description}','${post.bg_img}')" class="btn btn-success">
+                <button onclick="editPost(event,${post.id},'${post.tittle}','${post.description}','${post.bg_img}','${post.user_id}')" class="btn btn-success">
                     Edit
                 </button>
 
@@ -152,8 +156,8 @@ var cardBg = "";
 // Delete Post
 async function deletePost(event, id) {
     console.log(event, id)
-    try {
-        const{
+   try{
+    const{
         data: { user }} = await supabase.auth.getUser();
 const userID = user.id;
 
@@ -162,20 +166,35 @@ const userID = user.id;
             .from("post app table")
             .delete()
             .eq("id", id)
-            .eq("user_id", userID)
+             .eq("user_id", userID)
+
             .select()
         if(error){
             console.log(error)
         }
-        if(data.length===0){
+         if(data.length===0){
             alert("you can only delete your own post")
             return
-        }   
+        }  
     
         var card = event.target.parentNode.parentNode;
         card.remove();
 
     
+ }catch (error) {
+        console.log(error)
+    }
+}
+
+
+// Edit Post
+async function editPost(event, id, title, description, bgImg, post_id) {
+
+    try {
+            const { data: { user } } = await supabase.auth.getUser()
+console.log(user)
+userID=user.id
+console.log(post_id,user.id)
     } catch (error) {
         console.log(error)
     }
@@ -188,7 +207,6 @@ const userID = user.id;
 // Edit Post
 function editPost(event, id, title, description, bgImg) {
 
-    
     // var event= window.event
 
     var card = event.target.parentNode.parentNode;
@@ -209,8 +227,7 @@ function editPost(event, id, title, description, bgImg) {
 }
 
 // Create Post
-let email 
-let userID
+
 async function post() {
 
     var title = document.getElementById("title");
@@ -229,31 +246,29 @@ try {
     console.log(error)
 }
 
+
         if (edited) {
             try {
 
                 const { data, error } = await supabase
                     .from('post app table')
                     .update({
-                        tittle: title.value,
-                        description: description.value,
-                        bg_img: cardBg
-                    })
+                        tittle: title.value, description: description.value, bg_img: cardBg})
                     .eq('id', editId)
                     .select();
 
                 console.log("post data", data)
+            console.log(userID)
                 if (error) {
                     console.log(error);
                 }
+
+
                 console.log("updated data", data)
 
                 edited = false
                 edited = null
 
-                if(user_id==userID){
-                    alert("you can only update your post")
-                }
                 location.reload(); // updated data show karne ke liye
 
                 return;
@@ -276,19 +291,22 @@ try {
                         user_id:userID
                     })
                     .select();
+        console.log("Post data", data);
 
                 if (error) {
                     console.log(error);
-                    return;
                 }
+                } catch (error) {
+                console.log(error);
+            }
 
-                console.log("post data", data);
+
 
                 location.reload();
 
-            } catch (error) {
-                console.log(error);
-            }
+            // } catch (error) {
+            //     console.log(error);
+            // }
 
         }
 

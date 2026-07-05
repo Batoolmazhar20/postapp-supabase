@@ -68,7 +68,7 @@ async function login(event) {
 
         document.getElementById("loginFormNew").reset();
 
-        // window.location.href = "dashboard.html";
+        window.location.href = "dashboard.html";
 
     } catch (error) {
         console.log(error);
@@ -76,19 +76,7 @@ async function login(event) {
 }
 
 
-const { data } = supabase.auth.onAuthStateChange((event, session) => {
-    console.log(event, session)
-  
-    if (event === 'INITIAL_SESSION') {
-        
-      if(!session){
-        alert("Create account first!")
-      }
-    } else if (event === 'SIGNED_IN') {
-        alert("User Signed in successfully")
-        location="/dashboard.html"
-    }
-  })
+
   
 
 //events//
