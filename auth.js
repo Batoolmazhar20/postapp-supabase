@@ -68,7 +68,7 @@ async function login(event) {
 
         document.getElementById("loginFormNew").reset();
 
-        // window.location.href = "./dashboard.html";
+        window.location.href = "./dashboard.html";
 
     } catch (error) {
         console.log(error);
@@ -96,7 +96,7 @@ const { data } = supabase.auth.onAuthStateChange((event, session) => {
 
     } else if (event === 'SIGNED_IN') {
       alert("user signed in successfully")
-    location="./dashboard.html"
+  console.log("user signed in");
     }
   })
   
