@@ -87,6 +87,21 @@ if(!data.length){
 
 
 
+function showProfile(){
+    let box= document.getElementById("profileBox")
+    if(box.style.display==="none"){
+        box.style.display="block"
+    }else{
+        box.style.display="none"
+    }
+}
+
+async function logout() {
+    const { error } = await supabase.auth.signOut()
+if(!error){
+  window.location.href="index.html"
+}
+}
 
 window.onload = async function () {
 
@@ -95,6 +110,14 @@ window.onload = async function () {
 
         console.log(data)
 
+            const { data: { user } } = await supabase.auth.getUser()
+            console.log("user details", user)
+            let firstName = user.user_metadata.first_name;
+            let firstChar = firstName.charAt(0).toUpperCase();
+
+           console.log(firstChar);
+            document.getElementById("logoutBtn").innerHTML= firstChar
+            document.getElementById("userEmail").innerHTML= user.email
 
         data.forEach(post => {
 
@@ -104,7 +127,7 @@ window.onload = async function () {
             posts.innerHTML += `
         <div class="card mb-2"data-id="${post.id}">
 
-            <div class="card-header">${post.id}: @${post.email}~Post</div>
+            <div class="card-header">ID:${post.id}:<strong>${post.username}</strong> <br></br> @${post.email}~Post</div>
 
             <div
                 class="card-body"
@@ -226,6 +249,7 @@ function editPost(event, id, title, description, bgImg) {
     edited = true;
 }
 
+let username;
 // Create Post
 
 async function post() {
@@ -241,6 +265,8 @@ try {
     // console.log(user.email);
     email=user.email
     userID= user.id
+    username= user.user_metadata.first_name;
+
     if(error) console.log(error)
 } catch (error) {
     console.log(error)
@@ -288,7 +314,8 @@ try {
                         description: description.value,
                         bg_img: cardBg,
                         email:email,
-                        user_id:userID
+                        user_id:userID,
+                        username:username
                     })
                     .select();
         console.log("Post data", data);
@@ -378,10 +405,10 @@ function selectImg(src) {
 }
 
 
-document.getElementById("logoutBtn").addEventListener("click",logout)
-async function logout() {
-    const { error } = await supabase.auth.signOut()
-if(!error){
-  window.location.href="index.html"
-}
-}
+// document.getElementById("logoutBtn").addEventListener("click",logout)
+// async function logout() {
+//     const { error } = await supabase.auth.signOut()
+// if(!error){
+//   window.location.href="index.html"
+// }
+// }

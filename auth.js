@@ -22,20 +22,31 @@ async function Signup(event) {
     }
 
     try {
-        const { data, error } = await supabase.auth.signUp({email,password });
-        if (error) {
-            alert(error.message);
-            return;
-        }
+        const { data, error } = await supabase.auth.signUp(
+  {
+    email: email,
+    password: password,
+    options: {
+      data: {
+        first_name: username,
+        email: email,
+      }
+    }
+  }
+)
 
         console.log("Signup:", data);
-
+if (error) {
+    alert(error.message);
+    return;
+}
         alert("Account Created Successfully!");
 
         document.getElementById("signupFormNew").reset();
 
         // switch to login view
-        document.getElementById("toggleAuth").checked = true;
+        alert("Account Created Successfully!");
+window.location.href = "./dashboard.html";
 
     } catch (error) {
         console.log(error);

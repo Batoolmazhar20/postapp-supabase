@@ -19,8 +19,11 @@
 </div>
 
 
-        <button id="logoutBtn">logout</button>
-
+        <button id="logoutBtn" onclick="showProfile()" type="button">logout</button>
+<div id="profileBox" style="display: none;">
+  <p id="userEmail"></p>
+  <button id="signoutBtn" onclick="logout()">logout</button>
+</div>
      </div>
 </nav>
 

@@ -8,7 +8,16 @@ body {
     background: linear-gradient(90deg, #6a0dad, #1a1a1f) !important;
     box-shadow: 0 4px 20px rgba(106, 13, 173, 0.25);
     backdrop-filter: blur(10px);
+   
+    position:relative;
+    z-index:1000;
 }
+
+#profileBox{
+    position:absolute;
+    z-index:9999;
+}
+
 
 .navbar-brand {
     color: #ffffff !important;
@@ -173,14 +182,6 @@ body {
     align-items: center;
 }
 
-#logoutBtn{
-    color: white;
-    background: linear-gradient(135deg, #6c5ce7, #9600d46b);
-    border-radius: 6px;
-    border: none;
-    padding: 4px 10px;
-}
-
 
 .search-btn{
     background:#5b21b6;
@@ -202,4 +203,35 @@ body {
 
 #searchInput::placeholder {
     color: #bfa8ff;
+}
+
+#profileBox{
+    display:none;
+    position:absolute;
+    right:20px;
+    top:70px;
+    width:220px;
+    background:#3b0a69;
+    border-radius:10px;
+    padding:15px;
+    box-shadow:0 0 10px rgba(0,0,0,.2);
+    z-index:9999;
+}
+ 
+#logoutBtn{
+    color: white;
+    background: linear-gradient(135deg, #6c5ce7, #9600d46b);
+    border-radius: 50%;
+    border: none;
+    font-weight:bold;
+    cursor:pointer;
+    width:45px;
+    height:45px;
+}
+#signoutBtn{
+    background: #24143f;
+    color: white;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 6px;
 }
