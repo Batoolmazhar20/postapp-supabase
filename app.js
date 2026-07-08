@@ -256,6 +256,10 @@ async function post() {
 
     var title = document.getElementById("title");
     var description = document.getElementById("description");
+
+    let imageUploader = document.getElementById("imgInput").files[0];
+    console.log(imageUploader)
+
     var posts = document.getElementById("posts");
 
     if (title.value.trim() && description.value.trim()) {
@@ -271,6 +275,29 @@ try {
 } catch (error) {
     console.log(error)
 }
+
+let imageUrl=""
+
+if(imageUploader){
+    let fileName = `${Date.now}`//name ma shuru k 3 ya 4 index le lana ha ya phr shigt /pop kr k //
+  
+const {  error:imageError } = await supabase
+  .storage
+  .from('image-bucket')
+  .upload(fileName, imageUploader, {
+    cacheControl: '3600',
+    upsert: false
+  })
+}
+if(imageError){
+    alert("image can not be uploaded")
+    console.log(imageError)
+}
+
+const { data:imageData } = supabase
+  .storage
+  .from('post-bucket')
+  .getPublicUrl('folder/avatar1.png')
 
 
         if (edited) {
@@ -404,11 +431,3 @@ function selectImg(src) {
     console.log(cardBg);
 }
 
-
-// document.getElementById("logoutBtn").addEventListener("click",logout)
-// async function logout() {
-//     const { error } = await supabase.auth.signOut()
-// if(!error){
-//   window.location.href="index.html"
-// }
-// }
