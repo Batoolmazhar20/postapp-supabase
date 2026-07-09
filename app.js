@@ -260,6 +260,8 @@ async function post() {
     let imageUploader = document.getElementById("imgInput").files[0];
     console.log(imageUploader)
 
+    let imgFile = document.getElementById("background-img").files[0]
+    console.log(imgFile)
     var posts = document.getElementById("posts");
 
     if (title.value.trim() && description.value.trim()) {
@@ -299,14 +301,41 @@ const { data:imageData } = supabase
   .from('post-bucket')
   .getPublicUrl('folder/avatar1.png')
 
+let imgUrl =""
 
-        if (edited) {
+if(imgFile){
+    let fileName=`${Date.now()}-${imgFile.name}`
+    const { error: uploadError } = await supabase
+        .storage
+        .from('image-bucket')
+        .upload(fileName, imgFile, {
+        cacheControl: '3600',
+        upsert: false
+    })
+        if(uploadError){
+            alert("image can not be uploaded")
+            console.log(uploadError)
+            return
+        }
+        const{ data:imageData} = supabase
+        .storage
+        .from('image-bucket')
+        .getPublicUrl(fileName)
+        console.log(imageData.publicUrl)
+        imgUrl=imageData.publicUrl
+}else if(cardBg){
+   imgUrl=cardBg
+}else{
+    alert("select the image")
+}
+
+          if (edited) {
             try {
 
                 const { data, error } = await supabase
                     .from('post app table')
                     .update({
-                        tittle: title.value, description: description.value, bg_img: cardBg})
+                        tittle: title.value, description: description.value, bg_img: imgUrl})
                     .eq('id', editId)
                     .select();
 
@@ -339,7 +368,7 @@ const { data:imageData } = supabase
                     .insert({
                         tittle: title.value,
                         description: description.value,
-                        bg_img: cardBg,
+                        bg_img: imgUrl,
                         email:email,
                         user_id:userID,
                         username:username

@@ -175,12 +175,12 @@ body {
 .delete-btn:hover {
     background: #b91c1c;
 }
-
+/* 
 .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
+} */
 
 
 .search-btn{
@@ -234,4 +234,33 @@ body {
     border: none;
     padding: 4px 10px;
     border-radius: 6px;
+}
+/* 
+.imgbtn{
+    color: white;
+    background-color: #785ca1;
+    width: 40px;
+    border-radius: 10px;
+    height: 55px;
+}
+
+#iconImg{
+    color: white;
+    font-size: 24px;
+} */
+
+.imgbtn{
+    width: 55px;
+    height: 55px;
+    background:#100735;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+#iconImg{
+    color: white;
+    font-size: 24px;
 }
