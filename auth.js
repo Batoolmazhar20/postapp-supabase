@@ -111,5 +111,16 @@ const { data } = supabase.auth.onAuthStateChange((event, session) => {
     }
   })
   
-  // call unsubscribe to remove the callback
-  
+async function signUpWithGoogle(){
+try {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: 'http://127.0.0.1:5501/dashboard.html'
+      }
+    })
+  } catch (error) {
+    console.log(error);
+  }
+}
+window.signUpWithGoogle = signUpWithGoogle  
