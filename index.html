@@ -21,10 +21,14 @@
 
 
   <label for="toggleAuth">login</label>
+   
+
 </p>
       <input type="text" id="signupUsername" placeholder="Username" required />
       <input type="email" id="signupEmail" placeholder="Email" required />
       <input type="password" id="signupPassword" placeholder="Password" required />
+
+      <button onclick="signUpWithGoogle()"><img height="19px" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Google_Favicon_2025.svg/960px-Google_Favicon_2025.svg.png" alt=""> Continue with Google</button>
 
       <button type="submit">signup</button>
     </form>
@@ -39,11 +43,12 @@
       <p class="switch">
   Don't have an account?
 
-
   <label for="toggleAuth">signup</label>
 </p>
       <input type="email" id="loginEmailNew" placeholder="Email" required />
       <input type="password" id="loginPasswordNew" placeholder="Password" required />
+
+       <button onclick="signUpWithGoogle()"><img height="19px" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Google_Favicon_2025.svg/960px-Google_Favicon_2025.svg.png" alt=""> Continue with Google</button>
 
       <button type="submit">Login</button>
     </form>

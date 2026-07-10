@@ -101,7 +101,7 @@ const { data } = supabase.auth.onAuthStateChange((event, session) => {
   
     if (event === 'INITIAL_SESSION') {
      if(!session){
-        alert("create account first")
+        // alert("create account first")
      }
       console.log("session check", session);
 
