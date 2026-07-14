@@ -1,4 +1,4 @@
-var supabase = window.supabase.createClient('https://fyzkoualaabdlnisxidl.supabase.co', 'sb_publishable_5AlMtB9W4N9fLqV3BTibSw_1C2RPUkE')
+import supabase  from "./supabase.js"
 
 
 let edited = false
@@ -24,14 +24,39 @@ const { data, error } = await supabase
   .from('post app table')
   .select('*')
   .or(`tittle.ilike.%${searchInput}%,description.ilike.%${searchInput}%`)
+  .order("id", { ascending: false });
 
+if(error) {
+    console.log(error)
+    return;
+}
+
+renderPost(data)
+
+    }catch(error){
+        console.log(error)
+    }
+}
+  function renderPost(postData){
+
+  
     var posts = document.getElementById("posts");
 posts.innerHTML=""
-        data.forEach(post => {
+
+if (!postData.length) {
+        posts.innerHTML = `
+        <div class="p-3 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3 text-center">
+            <h5>Post not found</h5>
+            <p class="mb-0">The post you're looking for doesn't exist.</p>
+        </div>`;
+        return;
+    }
+
+        postData.forEach(post => {
             posts.innerHTML += `
         <div class="card mb-2"data-id="${post.id}">
 
-            <div class="card-header">${post.id}~Post</div>
+            <div class="card-header">${post.id}:<strong>${post.username}</strong> <br></br> @${post.email}~Post</div>
 
             <div
                 class="card-body"
@@ -54,7 +79,7 @@ posts.innerHTML=""
             </div>
 
             <div class="ms-auto m-2">
-                <button onclick="editPost(event,${post.id},'${post.tittle}','${post.description}','${post.bg_img}')" class="btn btn-success">
+                <button onclick="editPost(event,${post.id},'${post.tittle}','${post.description}','${post.bg_img}','${post.user_id}')" class="btn btn-success">
                     Edit
                 </button>
 
@@ -67,23 +92,11 @@ posts.innerHTML=""
         `
            
         });
-console.log(data)
-if(!data.length){
-    posts.innerHTML=`
-    <div class="d-flex-justigy-content-center align-items-center" style="height: 30vh"> </div>
-<div class="p-3 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3 text-center">
-
-<h5>Post not found</h5>
-<p class="mb-0">The post you're looking for doesn't exist.</p>
-</div>`
-}
-
-    if(error) console.log(error)
-
-    } catch (error) {
-        console.log(error)
     }
-}
+
+
+    
+
 
 
 
@@ -119,60 +132,18 @@ window.onload = async function () {
             document.getElementById("logoutBtn").innerHTML= firstChar
             document.getElementById("userEmail").innerHTML= user.email
 
-        data.forEach(post => {
+        
+        
+renderPost(data);
 
-            var posts = document.getElementById("posts");
 
-
-            posts.innerHTML += `
-        <div class="card mb-2"data-id="${post.id}">
-
-            <div class="card-header">ID:${post.id}:<strong>${post.username}</strong> <br></br> @${post.email}~Post</div>
-
-            <div
-                class="card-body"
-                style="
-                    background-image:url('${post.bg_img}');
-                    background-size:cover;
-                    background-repeat:no-repeat;
-                    height:200px;
-                "
-            >
-                <figure>
-                    <blockquote class="blockquote">
-                        <p>${post.tittle}</p>
-                    </blockquote>
-
-                    <figcaption class="blockquote-footer">
-                        ${post.description}
-                    </figcaption>
-                </figure>
-            </div>
-
-            
-            <div class="ms-auto m-2">
-                <button onclick="editPost(event,${post.id},'${post.tittle}','${post.description}','${post.bg_img}','${post.user_id}')" class="btn btn-success">
-                    Edit
-                </button>
-
-                <button onclick="deletePost(event,${post.id})" class="btn btn-danger">
-                    Delete
-                </button>
-            </div>
-
-        </div>
-        `
             if (error) console.log(error)
 
-        });
-    }
 
-
-    catch (error) {
+}catch (error) {
         console.log(error)
     }
 }
-
 
 var cardBg = "";
 
@@ -216,38 +187,27 @@ async function editPost(event, id, title, description, bgImg, post_id) {
     try {
             const { data: { user } } = await supabase.auth.getUser()
 console.log(user)
-userID=user.id
-console.log(post_id,user.id)
-    } catch (error) {
-        console.log(error)
+ if (user.id !== post_id) {
+            alert("You can only edit your own post.");
+            return;
+        }
+
+var card = event.target.parentNode.parentNode;
+
+        document.getElementById("title").value = title;
+        document.getElementById("description").value = description;
+
+        cardBg = bgImg;
+        editId = id;
+        edited = true;
     }
 
-
+catch (error) {
+        console.log(error);
+    }
 }
 
 
-
-// Edit Post
-function editPost(event, id, title, description, bgImg) {
-
-    // var event= window.event
-
-    var card = event.target.parentNode.parentNode;
-    var realId = card.getAttribute("data-id")
-
-    // var title =
-    //     card.children[1].children[0].children[0].children[0].innerText;
-
-    // var description =
-    //     card.children[1].children[0].children[1].innerText;
-
-    document.getElementById("title").value = title;
-    document.getElementById("description").value = description;
-
-    cardBg = bgImg;
-    editId = id;     // id save
-    edited = true;
-}
 
 let username;
 // Create Post
@@ -257,7 +217,7 @@ async function post() {
     var title = document.getElementById("title");
     var description = document.getElementById("description");
 
-    let imageUploader = document.getElementById("imgInput").files[0];
+    let imageUploader = document.getElementById("background-img").files[0];
     console.log(imageUploader)
 
     let imgFile = document.getElementById("background-img").files[0]
@@ -278,56 +238,38 @@ try {
     console.log(error)
 }
 
-let imageUrl=""
 
-if(imageUploader){
-    let fileName = `${Date.now}`//name ma shuru k 3 ya 4 index le lana ha ya phr shigt /pop kr k //
-  
-const {  error:imageError } = await supabase
-  .storage
-  .from('image-bucket')
-  .upload(fileName, imageUploader, {
-    cacheControl: '3600',
-    upsert: false
-  })
-}
-if(imageError){
-    alert("image can not be uploaded")
-    console.log(imageError)
-}
+let imgUrl = "";
 
-const { data:imageData } = supabase
-  .storage
-  .from('post-bucket')
-  .getPublicUrl('folder/avatar1.png')
+if (imageUploader) {
+    let fileName = `${Date.now()}-${imageUploader.name}`;
 
-let imgUrl =""
+    const { error: uploadError } = await supabase.storage
+        .from("image-bucket")
+        .upload(fileName, imageUploader);
 
-if(imgFile){
-    let fileName=`${Date.now()}-${imgFile.name}`
-    const { error: uploadError } = await supabase
+
+    if (uploadError) {
+        alert("Image upload failed")
+        console.log(uploadError);
+        return;
+    }
+
+    const { data:imageData } = supabase
         .storage
-        .from('image-bucket')
-        .upload(fileName, imgFile, {
-        cacheControl: '3600',
-        upsert: false
-    })
-        if(uploadError){
-            alert("image can not be uploaded")
-            console.log(uploadError)
-            return
-        }
-        const{ data:imageData} = supabase
-        .storage
-        .from('image-bucket')
-        .getPublicUrl(fileName)
-        console.log(imageData.publicUrl)
-        imgUrl=imageData.publicUrl
-}else if(cardBg){
-   imgUrl=cardBg
-}else{
-    alert("select the image")
+        .from("image-bucket")
+        .getPublicUrl(fileName);
+
+    imgUrl = imageData.publicUrl;
 }
+else if (cardBg) {
+    imgUrl = cardBg;
+}
+else {
+    alert("Please select an image.");
+    return;
+}
+
 
           if (edited) {
             try {
@@ -387,52 +329,9 @@ if(imgFile){
 
                 location.reload();
 
-            // } catch (error) {
-            //     console.log(error);
-            // }
+            
 
         }
-
-
-
-
-        posts.innerHTML += `
-        <div class="card mb-2">
-
-            <div class="card-header">~Post</div>
-
-            <div
-                class="card-body"
-                style="
-                    background-image:url('${cardBg}');
-                    background-size:cover;
-                    background-repeat:no-repeat;
-                    height:200px;
-                "
-            >
-                <figure>
-                    <blockquote class="blockquote">
-                        <p>${title.value}</p>
-                    </blockquote>
-
-                    <figcaption class="blockquote-footer">
-                        ${description.value}
-                    </figcaption>
-                </figure>
-            </div>
-
-            <div class="ms-auto m-2">
-                <button onclick="editPost()" class="btn btn-success">
-                    Edit
-                </button>
-
-                <button onclick="deletePost()" class="btn btn-danger">
-                    Delete
-                </button>
-            </div>
-
-        </div>
-        `;
 
     } else {
         Swal.fire({
@@ -460,3 +359,12 @@ function selectImg(src) {
     console.log(cardBg);
 }
 
+
+
+window.editPost = editPost;
+window.deletePost = deletePost;
+window.post = post;
+window.logout = logout;
+window.showProfile = showProfile;
+window.searchBar = searchBar;
+window.selectImg = selectImg;
