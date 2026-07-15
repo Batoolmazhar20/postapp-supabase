@@ -210,6 +210,7 @@ catch (error) {
 
 
 let username;
+let role;
 // Create Post
 
 async function post() {
@@ -232,6 +233,7 @@ try {
     email=user.email
     userID= user.id
     username= user.user_metadata.first_name;
+    role=user.user_metadata.role
 
     if(error) console.log(error)
 } catch (error) {
@@ -313,7 +315,8 @@ else {
                         bg_img: imgUrl,
                         email:email,
                         user_id:userID,
-                        username:username
+                        username:username,
+                        role:role
                     })
                     .select();
         console.log("Post data", data);

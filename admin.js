@@ -1,123 +1,121 @@
-
-console.log("Admin JS Loaded");
 import supabase from "./supabase.js";
 
 
 
-window.logout = logout
-window.searchPosts = searchPosts
+//signUp function//
+async function Signup(event) {
+    event.preventDefault();
 
-let allPosts = []
+    let username = document.getElementById("signupUsername").value.trim();
+    let email = document.getElementById("signupEmail").value.trim();
+    let password = document.getElementById("signupPassword").value;
 
-async function getPosts() {
-
-    const { data, error } = await supabase
-        .from("post app table")
-        .select("*")
-
-    if(error){
-        console.log(error)
-        return
-    }
-
-    allPosts = data
-
-    document.getElementById("totalPosts").innerText = data.length
-
-    renderPosts(data)
-
-}
-async function getUsers() {
-
-    const { data, error } = await supabase
-        .from("post app table")
-        .select("user_id");
-
-    if (error) {
-        console.log(error);
+    if (!username || !email || !password) {
+        alert("Please fill all fields");
         return;
     }
 
-    const uniqueUsers = [...new Set(data.map(item => item.user_id))];
+    try {
+        const { data, error } = await supabase.auth.signUp(
+  {
+    email: email,
+    password: password,
+    options: {
+      data: {
+        first_name: username,
+        email: email,
+        role: admin
+      }
+    }
+  }
+)
 
-    document.getElementById("totalUsers").innerText = uniqueUsers.length;
+        console.log("Signup:", data);
+if (error) {
+    alert(error.message);
+    return;
+}
+        alert("Account Created Successfully!");
+
+        document.getElementById("signupFormNew").reset();
+
+        // switch to login view
+        alert("Account Created Successfully!");
+window.location.href = "./dashboard.html";
+
+    } catch (error) {
+        console.log(error);
+    }
 }
 
-function renderPosts(posts){
 
-    const postDiv = document.getElementById("posts")
 
-    postDiv.innerHTML=""
+//login function//
+async function login(event) {
+    event.preventDefault();
 
-    posts.forEach(post=>{
+    let email = document.getElementById("loginEmailNew").value.trim();
+    let password = document.getElementById("loginPasswordNew").value.trim();
 
-        postDiv.innerHTML +=`
+    if (!email || !password) {
+        alert("Enter email & password");
+        return;
+    }
 
-        <div class="card shadow mb-3">
+    try {
+        const { data, error } = await supabase.auth.signInWithPassword({email,password });
 
-            <div class="card-body">
+        if (error) {
+            alert(error.message);
+            return;
+        }
 
-                <h5>${post.tittle}</h5>
+        alert("Login Successful!");
 
-                <p>${post.description}</p>
+        document.getElementById("loginFormNew").reset();
 
-                <button
-                class="btn btn-danger"
-                onclick="deletePost('${post.id}')">
+        window.location.href = "./dashboard.html";
 
-                Delete
+    } catch (error) {
+        console.log(error);
+    }
+}
 
-                </button>
 
-            </div>
 
-        </div>
+  
 
-        `
+//events//
+document.getElementById("signupFormNew").addEventListener("submit", Signup);
+document.getElementById("loginFormNew").addEventListener("submit", login);
 
+
+
+const { data } = supabase.auth.onAuthStateChange((event, session) => {
+    console.log(event, session)
+  
+    if (event === 'INITIAL_SESSION') {
+     if(!session){
+        // alert("create account first")
+     }
+      console.log("session check", session);
+
+    } else if (event === 'SIGNED_IN') {
+      alert("user signed in successfully")
+  console.log("user signed in");
+    }
+  })
+  
+async function signUpWithGoogle(){
+try {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: 'http://127.0.0.1:5501/dashboard.html'
+      }
     })
-
+  } catch (error) {
+    console.log(error);
+  }
 }
-
-window.deletePost = async function(id){
-
-    const confirmDelete = confirm("Delete this post?")
-
-    if(!confirmDelete) return
-
-    await supabase
-    .from("post app table")
-    .delete()
-    .eq("id",id)
-
-    getPosts()
-
-}
-
-function searchPosts(){
-
-    const value = document
-    .getElementById("search")
-    .value
-    .toLowerCase()
-
-    const filtered = allPosts.filter(post=>{
-
-        return post.title.toLowerCase().includes(value)
-
-    })
-
-    renderPosts(filtered)
-
-}
-
-async function logout(){
-
-    await supabase.auth.signOut()
-
-    location.href="login.html"
-
-}
-
-getPosts()
-getUsers()
+window.signUpWithGoogle = signUpWithGoogle  
