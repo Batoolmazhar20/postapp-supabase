@@ -227,6 +227,7 @@ body {
     cursor:pointer;
     width:45px;
     height:45px;
+    visibility:hidden;
 }
 #signoutBtn{
     background: #24143f;

@@ -1,4 +1,4 @@
-import supabase  from "./supabase.js"
+import supabase  from "../supabase.js"
 
 
 
@@ -24,6 +24,7 @@ async function Signup(event) {
       data: {
         first_name: username,
         email: email,
+        role:"user"
       }
     }
   }

@@ -1,4 +1,4 @@
-import supabase from "./supabase.js";
+import supabase from "../../supabase.js";
 
 
 
@@ -24,7 +24,7 @@ async function Signup(event) {
       data: {
         first_name: username,
         email: email,
-        role: admin
+        role: "admin"
       }
     }
   }
@@ -41,7 +41,7 @@ if (error) {
 
         // switch to login view
         alert("Account Created Successfully!");
-window.location.href = "./dashboard.html";
+window.location.href = "/adminpannel.html";
 
     } catch (error) {
         console.log(error);
@@ -74,7 +74,7 @@ async function login(event) {
 
         document.getElementById("loginFormNew").reset();
 
-        window.location.href = "./dashboard.html";
+        window.location.href = "/adminpannel.html";
 
     } catch (error) {
         console.log(error);
@@ -91,20 +91,20 @@ document.getElementById("loginFormNew").addEventListener("submit", login);
 
 
 
-const { data } = supabase.auth.onAuthStateChange((event, session) => {
-    console.log(event, session)
+// const { data } = supabase.auth.onAuthStateChange((event, session) => {
+//     console.log(event, session)
   
-    if (event === 'INITIAL_SESSION') {
-     if(!session){
-        // alert("create account first")
-     }
-      console.log("session check", session);
+//     if (event === 'INITIAL_SESSION') {
+//      if(!session){
+//         // alert("create account first")
+//      }
+//       console.log("session check", session);
 
-    } else if (event === 'SIGNED_IN') {
-      alert("user signed in successfully")
-  console.log("user signed in");
-    }
-  })
+//     } else if (event === 'SIGNED_IN') {
+//       alert("user signed in successfully")
+//   console.log("user signed in");
+//     }
+//   })
   
 async function signUpWithGoogle(){
 try {

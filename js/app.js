@@ -1,4 +1,4 @@
-import supabase  from "./supabase.js"
+import supabase  from "../supabase.js"
 
 
 let edited = false
@@ -124,9 +124,13 @@ window.onload = async function () {
         console.log(data)
 
             const { data: { user } } = await supabase.auth.getUser()
-            console.log("user details", user)
-            let firstName = user.user_metadata.first_name;
+            console.log("user details", user.user_metadata.role)
+            let firstName = (user.user_metadata.first_name || user.user_metadata.role);
             let firstChar = firstName.charAt(0).toUpperCase();
+
+            const logoutBtn = document.getElementById("logoutBtn");
+logoutBtn.textContent = firstChar;
+logoutBtn.style.visibility = "visible";
 
            console.log(firstChar);
             document.getElementById("logoutBtn").innerHTML= firstChar
@@ -362,6 +366,22 @@ function selectImg(src) {
     console.log(cardBg);
 }
 
+
+
+supabase
+  .channel('post-chennel')
+  .on('postgres_changes', { event: '*', schema: 'public' , table:"post app table"}, async (payload) => {
+    const { data :freshData, error:refreshErr } = await supabase.from('post app table').select("*").order('id', { ascending: false })
+    if(!refreshErr && freshData){
+      renderData(freshData)
+    }
+          
+          
+    console.log('Change received!', payload)
+  })
+  .subscribe((status)=>{
+    console.log(status);
+  })
 
 
 window.editPost = editPost;
